@@ -124,12 +124,13 @@ impl<T: rusb::UsbContext> ThermalPrinter<T> {
 			bail!("Input or output endpoint not found");
 		}
 
-		handle.claim_interface(interface.number())?;
 		if let Ok(kd_active) = handle.kernel_driver_active(interface.number()) {
 			if kd_active {
 				handle.detach_kernel_driver(interface.number())?;
 			}
 		}
+
+		handle.claim_interface(interface.number())?;
 
 		let device_descriptor = device.device_descriptor()?;
 
