@@ -242,6 +242,7 @@ impl<T: rusb::UsbContext> ThermalPrinter<T> {
 			0x33 => "QL-580N",
 			0x51 => "QL-650TD",
 			0x35 => "QL-700",
+			0x38 => "QL-800",
 			0x50 => "QL-1050",
 			0x34 => "QL-1060N",
 			_ => "Unknown"
@@ -299,40 +300,4 @@ impl<T: rusb::UsbContext> ThermalPrinter<T> {
 		self.handle.write_bulk(self.out_endpoint, data, Duration::from_millis(500))?;
 		Ok(())
 	}
-}
-
-#[cfg(test)]
-mod tests {
-	use crate::printer::{ printers, ThermalPrinter };
-	#[test]
-	fn connect() {
-		let printer_list = printers();
-		assert!(printer_list.len() > 0, "No printers found");
-		let mut printer = ThermalPrinter::new(printer_list.into_iter().next().unwrap()).unwrap();
-		printer.init().unwrap();
-	}
-
-	use std::path::PathBuf;
-    #[test]
-	#[ignore]
-    fn print() {
-		let printer_list = printers();
-		assert!(printer_list.len() > 0, "No printers found");
-		let mut printer = ThermalPrinter::new(printer_list.into_iter().next().unwrap()).unwrap();
-		let label = printer.init().unwrap().media.to_label();
-
-        let mut rasterizer = crate::text::TextRasterizer::new(
-            label,
-            PathBuf::from("./Space Mono Bold.ttf")
-        );
-        rasterizer.set_second_row_image(PathBuf::from("./logos/BuildGT Mono.png"));
-        let lines = rasterizer.rasterize(
-            "Ryan Petschek",
-            Some("Computer Science"),
-			1.2,
-			false
-        );
-
-		dbg!(printer.print(lines).unwrap());
-    }
 }

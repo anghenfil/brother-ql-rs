@@ -162,6 +162,7 @@ pub fn printer_name_from_id(id: u16) -> Option<&'static str> {
 		0x2029 => Some("QL-580N"),
 		0x201B => Some("QL-650TD"),
 		0x2042 => Some("QL-700"),
+		0x209b => Some("QL-800"),
 		0x2020 => Some("QL-1050"),
 		0x202A => Some("QL-1060N"),
 		_ => None
