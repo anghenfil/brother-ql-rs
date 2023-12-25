@@ -200,14 +200,14 @@ impl<T: rusb::UsbContext> ThermalPrinter<T> {
 		self.read()
 	}
 	/// Same as `print()` but will not return until the printer reports that it has finished printing.
-	pub fn print_blocking(&self, raster_lines: Vec<[u8; RASTER_LINE_LENGTH as usize]>) -> Result<()> {
+	pub fn print_blocking(&self, raster_lines: Vec<[u8; RASTER_LINE_LENGTH as usize]>, timeout: u32,) -> Result<()> {
 		let now = std::time::Instant::now();
 		self.print(raster_lines)?;
 		loop {
 			match self.read() {
 				Ok(ref response) if response.status_type == status::StatusType::PrintingCompleted => break,
 				_ => {
-					if now.elapsed() > Duration::from_secs(10) {
+					if now.elapsed() > Duration::from_secs(timeout.into()) {
 						return Err("Printer took too long to print".into());
 					}else{
 						thread::sleep(Duration::from_millis(50))
