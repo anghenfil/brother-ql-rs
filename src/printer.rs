@@ -240,7 +240,6 @@ impl<T: rusb::UsbContext> ThermalPrinter<T> {
 		let bytes_read = self.handle.read_bulk(self.in_endpoint, &mut response, Duration::from_millis(500))?;
 
 		if bytes_read != RECEIVE_SIZE || response[0] != 0x80 {
-			println!("Invalid response received from printer: {:x?} | {:x?}", response[0], response);
 			return Err("Invalid response received from printer".into());
 		}
 
